@@ -13,7 +13,7 @@
 #import "CBLSharedKeys.hh"
 #import "CBLStringBytes.h"
 
-#define kCBLDictionaryTypeKey @kC4ObjectTypeProperty
+#define kCBLMutableDictionaryTypeKey @kC4ObjectTypeProperty
 #define kCBLBlobTypeName @kC4ObjectType_Blob
 
 NSObject *const kCBLRemovedValue = [[NSObject alloc] init];
@@ -25,7 +25,7 @@ NSObject *const kCBLRemovedValue = [[NSObject alloc] init];
                  database: (CBLDatabase*)database
                     error: (NSError**)outError
 {
-    // This is overridden by CBL content classes like CBLDictionary and CBLBlob...
+    // This is overridden by CBL content classes like CBLMutableDictionary and CBLBlob...
     FLEncoder_WriteNSObject(encoder, self);
     return YES;
 }
@@ -48,7 +48,7 @@ NSObject *const kCBLRemovedValue = [[NSObject alloc] init];
 
 @implementation NSArray (CBLConversions)
 - (id) cbl_toCBLObject {
-    CBLArray* array = [[CBLArray alloc] init];
+    CBLMutableArray* array = [[CBLMutableArray alloc] init];
     [array setArray: self];
     return array;
 }
@@ -56,7 +56,7 @@ NSObject *const kCBLRemovedValue = [[NSObject alloc] init];
 
 @implementation NSDictionary (CBLConversions)
 - (id) cbl_toCBLObject {
-    CBLDictionary* dict = [[CBLDictionary alloc] init];
+    CBLMutableDictionary* dict = [[CBLMutableDictionary alloc] init];
     [dict setDictionary: self];
     return dict;
 }
@@ -109,17 +109,17 @@ NSObject *const kCBLRemovedValue = [[NSObject alloc] init];
             FLArray array = FLValue_AsArray(value);
             id flData = [[CBLFLArray alloc] initWithArray: array
                                                datasource: datasource database: database];
-            return [[CBLReadOnlyArray alloc] initWithFleeceData: flData];
+            return [[CBLArray alloc] initWithFleeceData: flData];
         }
         case kFLDict: {
             FLDict dict = FLValue_AsDict(value);
-            CBLStringBytes typeKey(kCBLDictionaryTypeKey);
+            CBLStringBytes typeKey(kCBLMutableDictionaryTypeKey);
             cbl::SharedKeys sk = database.sharedKeys;
             FLSlice type = FLValue_AsString(FLDict_GetSharedKey(dict, typeKey, &sk));
             if(!type.buf) {
                 id flData = [[CBLFLDict alloc] initWithDict: dict
                                                  datasource: datasource database: database];
-                return [[CBLReadOnlyDictionary alloc] initWithFleeceData: flData];
+                return [[CBLDictionary alloc] initWithFleeceData: flData];
             } else {
                 id result = FLValue_GetNSObject(value, &sk);
                 return [self dictionaryToCBLObject: result database: database];
@@ -134,7 +134,7 @@ NSObject *const kCBLRemovedValue = [[NSObject alloc] init];
 
 
 + /* private */ (id) dictionaryToCBLObject: (NSDictionary*)dict database: (CBLDatabase*)database {
-    NSString* type = dict[kCBLDictionaryTypeKey];
+    NSString* type = dict[kCBLMutableDictionaryTypeKey];
     if (type) {
         if ([type isEqualToString: kCBLBlobTypeName])
             return [[CBLBlob alloc] initWithDatabase: database properties: dict];

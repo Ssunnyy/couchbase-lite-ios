@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class CBLDocument, CBLDocumentFragment, CBLDatabaseChange, CBLDocumentChange;
+@class CBLDocument, CBLMutableDocument, CBLDocumentFragment, CBLDatabaseChange, CBLDocumentChange;
 @class CBLEncryptionKey;
 @class CBLIndex, CBLPredicateQuery;
 @protocol CBLConflictResolver, CBLDocumentChangeListener;
@@ -147,7 +147,7 @@ typedef NS_ENUM(uint32_t, CBLLogLevel) {
 
 
 /** 
- Gets an existing CBLDocument object with the given ID. If the document with the given ID
+ Gets an existing CBLMutableDocument object with the given ID. If the document with the given ID
  doesn't exist in the database, the value returned will be nil.
  
  @param documentID The document ID.
@@ -185,16 +185,16 @@ typedef NS_ENUM(uint32_t, CBLLogLevel) {
 
 /** 
  Saves the given document to the database.
- If the document in the database has been updated since it was read by this CBLDocument, a
+ If the document in the database has been updated since it was read by this CBLMutableDocument, a
  conflict occurs, which will be resolved by invoking the conflict handler. This can happen if
  multiple application threads are writing to the database, or a pull replication is copying
  changes from a server.
  
  @param document The document to be saved.
  @param error On return, the error if any.
- @return True on success, false on failure.
+ @return A new CBLDocument object.
  */
-- (BOOL) saveDocument: (CBLDocument*)document error: (NSError**)error;
+- (nullable CBLDocument*) saveDocument: (CBLMutableDocument*)document error: (NSError**)error;
 
 /** 
  Deletes the given document.
@@ -393,7 +393,7 @@ typedef NS_ENUM(uint32_t, CBLLogLevel) {
 
  @return All documents.
  */
-- (NSEnumerator<CBLDocument*>*) allDocuments;
+- (NSEnumerator<CBLMutableDocument*>*) allDocuments;
 
 /** 
  Compiles a database query, from any of several input formats.

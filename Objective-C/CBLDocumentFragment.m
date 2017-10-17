@@ -1,5 +1,5 @@
 //
-//  CBLDocumentFragment.m
+//  CBLMutableDocumentFragment.m
 //  CouchbaseLite
 //
 //  Created by Pasin Suriyentrakorn on 5/2/17.
@@ -34,7 +34,7 @@
 
 
 - (CBLFragment*) objectForKeyedSubscript: (NSString*)key {
-    return _doc ? _doc[key] : [[CBLFragment alloc] initWithValue: nil parent: nil parentKey: nil];
+    return _doc ? _doc[key] : [[CBLFragment alloc] initWithValue: nil];
 }
 
 

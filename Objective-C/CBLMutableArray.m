@@ -1,12 +1,12 @@
 //
-//  CBLArray.m
+//  CBLMutableArray.m
 //  CouchbaseLite
 //
 //  Created by Pasin Suriyentrakorn on 4/12/17.
 //  Copyright © 2017 Couchbase. All rights reserved.
 //
 
-#import "CBLArray.h"
+#import "CBLMutableArray.h"
 #import "CBLArray+Swift.h"
 #import "CBLBlob.h"
 #import "CBLData.h"
@@ -14,7 +14,7 @@
 #import "CBLJSON.h"
 
 
-@implementation CBLArray {
+@implementation CBLMutableArray {
     NSMutableArray* _array;
     NSMapTable* _changeListeners;
     BOOL _changed;
@@ -48,8 +48,8 @@
 #pragma mark - Type Getters
 
 
-- (nullable CBLArray*) arrayAtIndex: (NSUInteger)index {
-    return $castIf(CBLArray, [self objectAtIndex: index]);
+- (nullable CBLMutableArray*) arrayAtIndex: (NSUInteger)index {
+    return $castIf(CBLMutableArray, [self objectAtIndex: index]);
 }
 
 
@@ -73,8 +73,8 @@
 }
 
 
-- (nullable CBLDictionary*) dictionaryAtIndex: (NSUInteger)index {
-    return $castIf(CBLDictionary, [self objectAtIndex: index]);
+- (nullable CBLMutableDictionary*) dictionaryAtIndex: (NSUInteger)index {
+    return $castIf(CBLMutableDictionary, [self objectAtIndex: index]);
 }
 
 
@@ -131,8 +131,8 @@
 - (nullable id) objectAtIndex: (NSUInteger)index {
     if (!_array) {
         id value = [super objectAtIndex: index];
-        if ([value isKindOfClass: [CBLReadOnlyDictionary class]] ||
-            [value isKindOfClass: [CBLReadOnlyArray class]]) {
+        if ([value isKindOfClass: [CBLDictionary class]] ||
+            [value isKindOfClass: [CBLArray class]]) {
             [self copyFleeceData];
         } else
             return value;
@@ -164,7 +164,7 @@
 #pragma mark - Type Setters
 
 
-- (void) setArray: (nullable CBLArray*)value atIndex: (NSUInteger)index {
+- (void) setArray: (nullable CBLMutableArray*)value atIndex: (NSUInteger)index {
     [self setObject: value atIndex: index];
 }
 
@@ -184,7 +184,7 @@
 }
 
 
-- (void) setDictionary: (nullable CBLDictionary*)value atIndex: (NSUInteger)index {
+- (void) setDictionary: (nullable CBLMutableDictionary*)value atIndex: (NSUInteger)index {
     [self setObject: value atIndex: index];
 }
 
@@ -235,7 +235,7 @@
 #pragma mark - Type Appenders
 
 
-- (void) addArray: (nullable CBLArray*)value {
+- (void) addArray: (nullable CBLMutableArray*)value {
     [self addObject: value];
 }
 
@@ -255,7 +255,7 @@
 }
 
 
-- (void) addDictionary: (nullable CBLDictionary*)value {
+- (void) addDictionary: (nullable CBLMutableDictionary*)value {
     [self addObject: value];
 }
 
@@ -303,7 +303,7 @@
 #pragma mark - Type Inserters
 
 
-- (void) insertArray: (nullable CBLArray*)value atIndex: (NSUInteger)index {
+- (void) insertArray: (nullable CBLMutableArray*)value atIndex: (NSUInteger)index {
     [self insertObject: value atIndex: index];
 }
 
@@ -323,7 +323,7 @@
 }
 
 
-- (void) insertDictionary: (nullable CBLDictionary*)value atIndex: (NSUInteger)index {
+- (void) insertDictionary: (nullable CBLMutableDictionary*)value atIndex: (NSUInteger)index {
     [self insertObject: value atIndex: index];
 }
 
@@ -411,9 +411,9 @@
 #pragma mark - Subscript
 
 
-- (CBLFragment*) objectAtIndexedSubscript: (NSUInteger)index {
+- (CBLMutableFragment*) objectAtIndexedSubscript: (NSUInteger)index {
     id value = index < self.count ? [self objectAtIndex: index] : nil;
-    return [[CBLFragment alloc] initWithValue: value parent: self parentKey: @(index)];
+    return [[CBLMutableFragment alloc] initWithValue: value parent: self parentKey: @(index)];
 }
 
 

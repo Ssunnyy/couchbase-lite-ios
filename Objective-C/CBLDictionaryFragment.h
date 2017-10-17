@@ -6,14 +6,13 @@
 //  Copyright © 2017 Couchbase. All rights reserved.
 //
 
-
-#import "CBLReadOnlyDictionaryFragment.h"
 @class CBLFragment;
 
 /** 
- CBLDictionaryFragment protocol provides subscript access to CBLFragment objects by key. 
+ CBLDictionaryFragment protocol provides subscript access to CBLFragment
+ objects by key.
  */
-@protocol CBLDictionaryFragment <CBLReadOnlyDictionaryFragment>
+@protocol CBLDictionaryFragment <NSObject>
 
 /** 
  Subscript access to a CBLFragment object by key.
@@ -24,4 +23,3 @@
 - (CBLFragment*) objectForKeyedSubscript: (NSString*)key;
 
 @end
-

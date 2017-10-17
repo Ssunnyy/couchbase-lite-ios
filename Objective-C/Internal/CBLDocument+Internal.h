@@ -7,20 +7,20 @@
 //
 
 #pragma once
-#import "CBLArray.h"
+#import "CBLMutableArray.h"
 #import "CBLBlob.h"
 #import "CBLC4Document.h"
 #import "CBLDatabase.h"
-#import "CBLDictionary.h"
-#import "CBLDocument.h"
+#import "CBLMutableDictionary.h"
+#import "CBLMutableDocument.h"
 #import "CBLDocumentFragment.h"
 #import "CBLFLArray.h"
 #import "CBLFLDict.h"
+#import "CBLMutableFragment.h"
+#import "CBLArray.h"
+#import "CBLDocument.h"
+#import "CBLDictionary.h"
 #import "CBLFragment.h"
-#import "CBLReadOnlyArray.h"
-#import "CBLReadOnlyDocument.h"
-#import "CBLReadOnlyDictionary.h"
-#import "CBLReadOnlyFragment.h"
 #import "Fleece.h"
 
 
@@ -28,25 +28,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 //////////////////
 
-@interface CBLDocument ()
+@interface CBLMutableDocument ()
 
-- (BOOL) save: (NSError**)error;
-
-- (BOOL) deleteDocument: (NSError**)error;
-
-- (BOOL) purge: (NSError**)error;
+- (instancetype) initWithDocument: (CBLDocument*)doc;
 
 @end
 
 //////////////////
 
-@interface CBLReadOnlyDocument ()
+@interface CBLDocument ()
 
 @property (nonatomic, nullable) CBLDatabase* database;
 
 @property (nonatomic, readonly) C4Database* c4db;   // Throws assertion-failure if null
 
-@property (nonatomic, nullable) CBLC4Document* c4Doc;
+@property (nonatomic, readonly) CBLC4Document* c4Doc;
 
 @property (nonatomic, readonly) BOOL exists;
 
@@ -58,8 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype) initWithDatabase: (nullable CBLDatabase*)database
                        documentID: (NSString*)documentID
-                            c4Doc: (nullable CBLC4Document*)c4Doc
-                       fleeceData: (nullable CBLFLDict*)data NS_DESIGNATED_INITIALIZER;
+                            c4Doc: (nullable CBLC4Document*)c4Doc NS_DESIGNATED_INITIALIZER;
 
 - (instancetype) initWithDatabase: (CBLDatabase*)database
                        documentID: (NSString*)documentID
@@ -67,8 +62,8 @@ NS_ASSUME_NONNULL_BEGIN
                             error: (NSError**)outError;
 
 - (BOOL) selectConflictingRevision;
-- (BOOL) selectCommonAncestorOfDoc: (CBLReadOnlyDocument*)doc1
-                            andDoc: (CBLReadOnlyDocument*)doc2;
+- (BOOL) selectCommonAncestorOfDoc: (CBLDocument*)doc1
+                            andDoc: (CBLDocument*)doc2;
 
 - (nullable NSData*) encode: (NSError**)outError;
 
@@ -76,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //////////////////
 
-@interface CBLDictionary ()
+@interface CBLMutableDictionary ()
 
 @property (nonatomic) BOOL changed;
 
@@ -84,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //////////////////
 
-@interface CBLReadOnlyArray ()
+@interface CBLArray ()
 
 @property (nonatomic, readonly, nullable) CBLFLArray* data;
 
@@ -94,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //////////////////
 
-@interface CBLReadOnlyDictionary ()
+@interface CBLDictionary ()
 
 @property (nonatomic, nullable) CBLFLDict* data;
 
@@ -106,7 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /////////////////
 
-@interface CBLReadOnlyFragment ()
+@interface CBLFragment ()
 
 - (instancetype) initWithValue: (nullable id)value;
 
@@ -114,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /////////////////
 
-@interface CBLFragment ()
+@interface CBLMutableFragment ()
 
 - (instancetype) initWithValue: (nullable id)value
                         parent: (nullable id)parent

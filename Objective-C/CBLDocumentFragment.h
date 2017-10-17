@@ -1,5 +1,5 @@
 //
-//  CBLDocumentFragment.h
+//  CBLMutableDocumentFragment.h
 //  CouchbaseLite
 //
 //  Created by Pasin Suriyentrakorn on 5/2/17.
@@ -11,9 +11,9 @@
 @class CBLDocument;
 
 /** 
- CBLDocumentFragment provides access to a document object. CBLDocumentFragment also provides
+ CBLMutableDocumentFragment provides access to a document object. CBLMutableDocumentFragment also provides
  subscript access by either key or index to the data values of the document which are
- wrapped by CBLFragment objects.
+ wrapped by CBLMutableFragment objects.
  */
 @interface CBLDocumentFragment : NSObject <CBLDictionaryFragment>
 

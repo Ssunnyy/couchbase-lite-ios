@@ -1,12 +1,12 @@
 //
-//  CBLDictionary+Swift.h
+//  CBLMutableDictionary+Swift.h
 //  CouchbaseLite
 //
 //  Created by Pasin Suriyentrakorn on 5/8/17.
 //  Copyright © 2017 Couchbase. All rights reserved.
 //
 
-#import "CBLDictionary.h"
+#import "CBLMutableDictionary.h"
 
 @interface CBLDictionary ()
 

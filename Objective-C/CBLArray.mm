@@ -1,13 +1,13 @@
 //
-//  CBLReadOnlyArray.m
+//  CBLArray.m
 //  CouchbaseLite
 //
 //  Created by Pasin Suriyentrakorn on 4/12/17.
 //  Copyright © 2017 Couchbase. All rights reserved.
 //
 
-#import "CBLReadOnlyArray.h"
-#import "CBLReadOnlyArray+Swift.h"
+#import "CBLArray.h"
+#import "CBLArray+Swift.h"
 #import "CBLData.h"
 #import "CBLDatabase+Internal.h"
 #import "CBLDocument+Internal.h"
@@ -15,7 +15,7 @@
 #import "CBLSharedKeys.hh"
 
 
-@implementation CBLReadOnlyArray {
+@implementation CBLArray {
     CBLFLArray* _data;
     FLArray _array;
     cbl::SharedKeys _sharedKeys;
@@ -38,8 +38,8 @@
 #pragma mark - GETTER
 
 
-- (nullable CBLReadOnlyArray*) arrayAtIndex: (NSUInteger)index {
-    return $castIf(CBLReadOnlyArray, [self fleeceValueToObjectAtIndex: index]);
+- (nullable CBLArray*) arrayAtIndex: (NSUInteger)index {
+    return $castIf(CBLArray, [self fleeceValueToObjectAtIndex: index]);
 }
 
 
@@ -58,8 +58,8 @@
 }
 
 
-- (nullable CBLReadOnlyDictionary*) dictionaryAtIndex: (NSUInteger)index {
-    return $castIf(CBLReadOnlyDictionary, [self fleeceValueToObjectAtIndex: index]);
+- (nullable CBLDictionary*) dictionaryAtIndex: (NSUInteger)index {
+    return $castIf(CBLDictionary, [self fleeceValueToObjectAtIndex: index]);
 }
 
 
@@ -117,7 +117,7 @@
 
 
 - (id) cbl_toCBLObject {
-    return [[CBLArray alloc] initWithFleeceData: self.data];
+    return [[CBLMutableArray alloc] initWithFleeceData: self.data];
 }
 
 
@@ -151,9 +151,9 @@
 #pragma mark - SUBSCRIPTING
 
 
-- (CBLReadOnlyFragment*) objectAtIndexedSubscript: (NSUInteger)index {
+- (CBLFragment*) objectAtIndexedSubscript: (NSUInteger)index {
     id value = index < self.count ? [self fleeceValueToObjectAtIndex: index] : nil;
-    return [[CBLReadOnlyFragment alloc] initWithValue: value];
+    return [[CBLFragment alloc] initWithValue: value];
 }
 
 

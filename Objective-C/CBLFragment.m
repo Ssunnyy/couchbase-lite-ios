@@ -7,61 +7,22 @@
 //
 
 #import "CBLFragment.h"
-#import "CBLData.h"
-#import "CBLDocument+Internal.h"
+#import "CBLBlob.h"
 #import "CBLJSON.h"
+#import "CBLArray.h"
+#import "CBLDictionary.h"
+#import "CBLData.h"
 
 @implementation CBLFragment {
     id _value;
-    id _parent;
-    id _parentKey;
-    NSUInteger _index;
 }
 
-
-- /* internal */ (instancetype) initWithValue: (id)value parent: (id)parent parentKey: (id)parentKey {
-    self = [super initWithValue: value];
+- /* internal */ (instancetype) initWithValue: (id)value {
+    self = [super init];
     if (self) {
         _value = value;
-        _parent = parent;
-        _parentKey = parentKey;
     }
     return self;
-}
-
-
-#pragma mark - SUBSCRIPTING
-
-
-- (CBLFragment*) objectForKeyedSubscript: (NSString*)key {
-    if ([_value conformsToProtocol: @protocol(CBLDictionary)])
-        return [_value objectForKeyedSubscript: key];
-    return [[CBLFragment alloc] initWithValue: nil parent: nil parentKey: nil];
-}
-
-
-- (CBLFragment*) objectAtIndexedSubscript: (NSUInteger)index {
-    if ([_value conformsToProtocol: @protocol(CBLArray)])
-        return [_value objectAtIndexedSubscript: index];
-    return [[CBLFragment alloc] initWithValue: nil parent: nil parentKey: nil];
-}
-
-
-#pragma mark - SET
-
-
-- (void) setValue: (NSObject*)value {
-    if ([_parent conformsToProtocol: @protocol(CBLDictionary)]) {
-        NSString* key = (NSString*)_parentKey;
-        [_parent setObject: value forKey: key];
-        _value = [_parent objectForKey: key];
-    } else if ([_parent conformsToProtocol: @protocol(CBLArray)]) {
-        NSInteger index = [_parentKey integerValue];
-        if (index >= 0 && (NSUInteger)index < ((CBLArray*)_parent).count) {
-            [_parent setObject: value atIndex: index];
-            _value = [_parent objectAtIndex: index];
-        }
-    }
 }
 
 
@@ -133,6 +94,23 @@
 
 - (BOOL) exists {
     return _value != nil;
+}
+
+
+#pragma mark SUBSCRIPTING
+
+
+- (CBLFragment*) objectForKeyedSubscript: (NSString*)key {
+    if ([_value conformsToProtocol: @protocol(CBLDictionary)])
+        return [_value objectForKeyedSubscript: key];
+    return [[CBLFragment alloc] initWithValue: nil];
+}
+
+
+- (CBLFragment*) objectAtIndexedSubscript: (NSUInteger)index {
+    if ([_value conformsToProtocol: @protocol(CBLArray)])
+        return [_value objectAtIndexedSubscript: index];
+    return [[CBLFragment alloc] initWithValue: nil];
 }
 
 
